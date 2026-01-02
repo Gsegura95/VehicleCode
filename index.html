@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Vehicle Code – 79 Question Practice Exam</title>
+<style>
+body{background:#0b1c2d;color:white;font-family:Arial;padding:20px}
+h1{text-align:center}
+.question{border:1px solid #444;padding:12px;margin-bottom:14px;border-radius:8px}
+.correct{color:#00ff99}
+.wrong{color:#ff6b6b}
+button{padding:12px;font-size:16px;margin-top:20px}
+small{opacity:.8}
+</style>
+</head>
+<body>
+
+<h1>Vehicle Code – 79 Question Practice Exam</h1>
+<div id="quiz"></div>
+<button onclick="grade()">Submit Test</button>
+<h2 id="result"></h2>
+
+<script>
+// 79 QUESTIONS — WORD FOR WORD FROM THE PDF, IN ORDER
+const test = [
+["What is the default grading for MVC violations?","A","Summary","Felony","Misdemeanor","Citation only"],
+["A pedestrian is defined as:","B","A bicyclist","An individual on foot","A person using an EPAMD","Any person in the roadway"],
+["A resident is a person dwelling permanently or continuously for more than:","C","45 days","30 days","60 days","90 days"],
+["Under the MVC definition, “state” includes:","D","Only the 50 U.S. states","U.S. states and Mexico","Only U.S. territories","District of Columbia, Puerto Rico, and Canadian provinces"],
+["The department may recall an operating privilege due to:","A","Incompetency","Parking violations","Speeding","Expired inspection"],
+["All drivers must exhibit on demand:","B","Registration only","License, registration, and insurance","Insurance only","Driver’s license only"],
+["The difference between antique and classic vehicles is based on:","C","Engine size","Registration type","Age","Vehicle weight"],
+["A self-balancing, two non-tandem wheeled electric device is an:","D","Motorized scooter","Electric bicycle","Motorized pedacycle","EPAMD"],
+["When “standing” is prohibited, it means:","C","Parking a vehicle","Any vehicle stop","Halting except to receive or discharge passengers","Temporary stopping"],
+["A newly purchased vehicle must be inspected within:","B","7 days","10 days","15 days","5 days"],
+["Vehicles manufactured after 1981 have a VIN with:","D","16 digits","18 digits","15 digits","17 digits"],
+["“No passing zone” signs must be posted:","B","Every half mile","At the beginning and end of the zone","Only at intersections","Every 100 feet"],
+["Chapter 13 of Title 75 covers:","C","Licensing","Traffic violations","Registration and certificates of title","Enforcement"],
+["To avoid penalty, registration must be produced within:","A","5 days","10 days","3 days","15 days"],
+["“Occasional transportation” for antique/classic plates means:","C","Daylight hours only","Shows only","One day per week","One day per month"],
+["To avoid penalty for not having a license, it must be produced within:","B","10 days","15 days","30 days","5 days"],
+["Commercial vehicles must display______ on both sides:","C","VIN number","Insurance policy number","Name of business or operator","License plate number"],
+["MVC fees are covered under:","D","Chapter 17","Chapter 11","Chapter 13","Chapter 19"],
+["Section 3101 generally applies to vehicles operated:","C","On private property","Anywhere in the state","On the highway","In business districts"],
+["Traffic control devices are presumed lawful.","C","False","Only if marked","True","Only in urban areas"],
+["At 35 mph or less, turn signals must be given for:","C","75 feet","50 feet","100 feet","300 feet"],
+["At speeds over 35 mph, turn signals must be given for:","D","250 feet","100 feet","200 feet","300 feet"],
+["Drivers must stop within how many feet of a school bus with red signals?","B","5 feet","10 feet","20 feet","15 feet"],
+["A school bus operator may report a violation within:","C","36 hours","72 hours","48 hours","24 hours"],
+["Drivers on divided highways must stop for buses on the opposite side.","A","False","True","Only during daylight","Only in school zones"],
+["Conviction for overtaking a school bus results in:","C","6 points, 90-day suspension","5 points, 30-day suspension","5 points, 60-day suspension","3 points, warning"],
+["Speedometer timing must be done over:","C","2/10 mile","1/10 mile","3/10 mile","1/2 mile"],
+["Speed timing devices may not be used within how many feet of a reduced speed sign?","C","300","400","500","200"],
+["Bicycle helmets are required for riders:","B","Under 14","Under 12","Under 16","All riders"],
+["A motorcycle carrying a passenger must have:","D","Sidecar","boots","helmet","Footrests and handholds"],
+["A natural person, firm, or corporation is a:","D","Owner","Resident","Operator","Person"],
+["Temporary storing of a vehicle is:","B","Standing","Parking","Halting","Stopping"],
+["Combined weight of vehicle and load (excluding driver) is:","B","Shipping weight","Gross weight","Net weight","Combination weight"],
+["A roadway providing access to rear or side of buildings is an:","D","Parkway","Service road","Lane","Alley"],
+["Surrendering a document temporarily for examination is an:","D","Detention","Seizure","Confiscation","Exhibit"],
+["Classic vehicles are ___ years old; antique vehicles are ___ years old:","C","20 / 30","10 / 20","15 / 25","25 / 35"],
+["Most common reason for license suspension is:","D","Reckless driving","Speeding","DUI","Failure to pay fines and costs"],
+["A motorized pedacycle may not exceed:","B","30 mph","25 mph","35 mph","20 mph"],
+["“Stop” means:","D","Yield","Park","Slow down","Complete cessation of movement"],
+["Who may remove inspection stickers?","C","PennDOT only","Mechanics, dealers, wrecker","Police, salvors, windshield replacers","Police only"],
+["Ownership transfer must occur within:","B","15 days","20 days","30 days","10 days"],
+["A person other than a lienholder with property rights is the:","D","Registrant","Operator","Custodian","Owner"],
+["Section 6101 refers to:","C","Inspections","DUI penalties","Applicability and uniformity of title provisions","Authority to stop vehicles"],
+["Buildings within 100 feet for ¼ mile define a:","D","Residential district","Business district","School zone","Urban district"],
+["Businesses occupying 300 feet within 600 feet define a:","C","Residential district","Industrial zone","Business district","Urban district"],
+["It is a ___________ to operate a vehicle in Pennsylvania:","D","Driving privilege","Vehicle authorization","Licensing authority","Operating privilege"],
+["“Shall” means:","D","Optional","Advisory","Recommended","Required or prohibited"],
+["A vehicle carrying 15 or more persons for compensation is a:","D","Bus","Commercial carrier","Taxi","Mass transit vehicle"],
+["Proof of insurance is covered under:","C","3802","1547","1786F","6308"],
+["Obedience of pedestrians to traffic control devices is:","B","3332","3102","3303","3101"],
+["A taxi is defined as:","D","Any hired vehicle","Mass transit vehicle","School vehicle","On-call vehicle carrying no more than 8 persons"],
+["A vehicle used exclusively for agriculture is a:","C","Utility vehicle","Special mobile equipment","Farm vehicle","Commercial vehicle"],
+["After 48 hours, abandoned vehicles must be reported to:","D","PennDOT","Owner","Police","Neighborhood services"],
+["Antique, classic, and collection plates are governed by:","D","1547","1786","3802","1340"],
+["A roadway not intended for through traffic is an:","C","Residential district","Urban district","Alley","Limited access highway"],
+["Two or more vehicles connected in tandem is a:","D","Convoy","Fleet","Platoon","Combination"],
+["Overtaking on the left is covered by:","B","3301","3303","3332","3307"],
+["When approached by an emergency vehicle, a driver must:","D","Yield","Slow down","Continue driving","Pull right and stop"],
+["Duty of drivers in construction zones is:","B","3702","3326","3303","3332"],
+["Speed timing devices must be calibrated within:","C","45 days","30 days","60 days","90 days"],
+["An implement of husbandry is a commercial motor vehicle.","B","True","False","Only when loaded","Only on highways"],
+["Speedometers must be checked within:","A","1 year","9 months","6 months","2 years"],
+["Violation of turning-around limitations is:","D","3332","3303","3702","6504"],
+["“Should” means:","B","Required","Advisable but not required","Prohibited","Illegal"],
+["A limited access highway with controlled entry/exit is a:","C","Parkway","Expressway","Freeway","Turnpike"],
+["NOT a PennDOT function:","A","Criminal prosecution","Record maintenance","Traffic law regulation","Highway maintenance"],
+["NOT authorized on limited access highways:","D","Commercial trucks","Emergency vehicles","Passenger vehicles","Motorized pedacycles"],
+["A person holding a security interest in a vehicle is a:","D","Owner","Custodian","Registrant","Lienholder"],
+["Pedestrians crossing outside a crosswalk is:","D","Trespassing","Standing","Loitering","Jaywalking"],
+["Backing limitations are covered under:","B","3332","3702","3303","6504"],
+["Section 6504(b) provides imprisonment of one day for every:","D","$30 unpaid","$25 unpaid","$40 unpaid","$50 unpaid"],
+["A person shall not drive unless properly licensed under:","C","1547","3718","1501","6308"],
+["A learner’s permit holder must be supervised by:","D","Any licensed driver","Licensed driver at least 18","Parent or guardian only","Licensed driver at least 21"],
+["3326 duty of a driver in construction:","D","Being alert","Violations","Speeding","Verify"],
+["Police authority to stop vehicles is granted under:","C","1547","3718","6308","3802"],
+["Financial responsibility (insurance) is required under:","B","1547","1786","1501","3718"]
+];
+
+// Render
+const quiz = document.getElementById("quiz");
+for(let i=0;i<test.length;i++){
+  const q=test[i];
+  const d=document.createElement("div");
+  d.className="question";
+  d.id="q"+i;
+  d.innerHTML=`<b>${i+1}. ${q[0]}</b><br>
+<label><input type="radio" name="q${i}" value="A"> A. ${q[2]}</label><br>
+<label><input type="radio" name="q${i}" value="B"> B. ${q[3]}</label><br>
+<label><input type="radio" name="q${i}" value="C"> C. ${q[4]}</label><br>
+<label><input type="radio" name="q${i}" value="D"> D. ${q[5]}</label><br>`;
+  quiz.appendChild(d);
+}
+const count=document.createElement("p");
+count.innerHTML=`<small>Total questions loaded: ${test.length}</small>`;
+quiz.prepend(count);
+
+// Grade
+function grade(){
+  let score=0;
+  for(let i=0;i<test.length;i++){
+    const q=test[i];
+    const box=document.getElementById("q"+i);
+    const sel=document.querySelector(`input[name="q${i}"]:checked`);
+    if(sel){
+      if(sel.value===q[1]){
+        score++; box.classList.add("correct");
+      }else{
+        box.classList.add("wrong");
+        box.insertAdjacentHTML("beforeend",`<div><b>Correct Answer: ${q[1]}</b></div>`);
+      }
+    }
+  }
+  document.getElementById("result").innerText=`Score: ${score} / ${test.length}`;
+}
+</script>
+</body>
+</html>
